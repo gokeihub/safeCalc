@@ -1,10 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 class DoubleBackToCloseApp extends StatefulWidget {
   final SnackBar snackBar;
-
   final Widget child;
 
   const DoubleBackToCloseApp({
@@ -14,11 +12,10 @@ class DoubleBackToCloseApp extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _DoubleBackToCloseAppState createState() => _DoubleBackToCloseAppState();
+  DoubleBackToCloseAppState createState() => DoubleBackToCloseAppState();
 }
 
-class _DoubleBackToCloseAppState extends State<DoubleBackToCloseApp> {
+class DoubleBackToCloseAppState extends State<DoubleBackToCloseApp> {
   var _closedCompleter = Completer<SnackBarClosedReason>()
     ..complete(SnackBarClosedReason.remove);
 

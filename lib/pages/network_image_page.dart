@@ -8,13 +8,12 @@ class NetworkImagePage extends StatefulWidget {
   const NetworkImagePage({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
-  _NetworkImagePageState createState() => _NetworkImagePageState();
+  NetworkImagePageState createState() => NetworkImagePageState();
 }
 
-class _NetworkImagePageState extends State<NetworkImagePage> {
+class NetworkImagePageState extends State<NetworkImagePage> {
   List<String> _networkImageFilePaths = [];
-  TextEditingController textEditingController = TextEditingController(text: '');
+  TextEditingController textEditingController = TextEditingController();
 
   @override
   void initState() {
@@ -25,110 +24,119 @@ class _NetworkImagePageState extends State<NetworkImagePage> {
   Future<void> _loadMediaFilePaths() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      try {
-        _networkImageFilePaths = prefs.getStringList('mediaNetworkImagePageFilePaths') ?? [];
-      } catch (e) {
-        //
-      }
+      _networkImageFilePaths =
+          prefs.getStringList('mediaNetworkImagePageFilePaths') ?? [];
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: ()  {
-           showModalBottomSheet(
-              context: context,
-              builder: (index) {
-                return SizedBox(
-                  height: 200,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        child: CupertinoTextField(
-                          controller: textEditingController,
-                          placeholder: 'Enter Valid link',
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: const Text('Cancle')),
-                          TextButton(
-                              onPressed: () async {
-                                try {
-                                  setState(() {
-                                    _networkImageFilePaths
-                                        .add(textEditingController.text);
-                                    textEditingController.text == '';
-                                    Navigator.pop(context);
-                                  });
-                                } catch (e) {
-                                  //
-                                }
-
-                                try {
-                                  await _saveMediaFilePaths();
-                                } catch (e) {
-                                  //
-                                }
-                              },
-                              child: const Text('Ok')),
-                        ],
-                      )
-                    ],
-                  ),
-                );
-              });
+        onPressed: () async {
+          await _showAddImageDialog(context);
         },
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Hi'),
+        title: const Text('Network Images'),
+        centerTitle: true,
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: MasonryGridView.count(
-              itemCount: _networkImageFilePaths.length,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onLongPress: () {
-                    try {
-                      _showDeleteConfirmationDialog(index);
-                    } catch (e) {
-                      //
-                    }
-                  },
-                  onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (b) => ImageFullScreenPage(
-                            imagePath: _networkImageFilePaths[index])));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(5.0),
-                    child: CachedNetworkImage(
-                      imageUrl: _networkImageFilePaths[index],
-                    ),
-                  ),
-                );
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: MasonryGridView.count(
+          itemCount: _networkImageFilePaths.length,
+          crossAxisCount: 2,
+          mainAxisSpacing: 8.0,
+          crossAxisSpacing: 8.0,
+          itemBuilder: (context, index) {
+            return GestureDetector(
+              onLongPress: () {
+                _showDeleteConfirmationDialog(index);
               },
-              crossAxisCount: 2,
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (b) => ImageFullScreenPage(
+                        imagePath: _networkImageFilePaths[index])));
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: CachedNetworkImage(
+                  imageUrl: _networkImageFilePaths[index],
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    color: isDarkMode ? Colors.grey[850] : Colors.grey[300],
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    color: isDarkMode ? Colors.grey[850] : Colors.grey[300],
+                    child: const Icon(Icons.error, color: Colors.red),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showAddImageDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Add Network Image'),
+          content: SizedBox(
+            height: 100,
+            child: Column(
+              children: [
+                CupertinoTextField(
+                  controller: textEditingController,
+                  placeholder: 'Enter Valid URL',
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        if (textEditingController.text.isNotEmpty) {
+                          setState(() {
+                            _networkImageFilePaths
+                                .add(textEditingController.text);
+                            textEditingController.clear();
+                          });
+                          await _saveMediaFilePaths();
+                          // ignore: use_build_context_synchronously
+                          Navigator.pop(context);
+                        }
+                      },
+                      child: const Text('Add'),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
   Future<void> _saveMediaFilePaths() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setStringList('mediaNetworkImagePageFilePaths', _networkImageFilePaths);
+    await prefs.setStringList(
+        'mediaNetworkImagePageFilePaths', _networkImageFilePaths);
   }
 
   Future<void> _showDeleteConfirmationDialog(int index) async {
@@ -161,13 +169,10 @@ class _NetworkImagePageState extends State<NetworkImagePage> {
   void _deleteMedia(int index) async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
-      try {
-        _networkImageFilePaths.removeAt(index);
-      } catch (e) {
-        //
-      }
+      _networkImageFilePaths.removeAt(index);
     });
-    await prefs.setStringList('mediaNetworkImagePageFilePaths', _networkImageFilePaths);
+    await prefs.setStringList(
+        'mediaNetworkImagePageFilePaths', _networkImageFilePaths);
   }
 }
 
@@ -188,8 +193,12 @@ class ImageFullScreenPage extends StatelessWidget {
           minScale: 1.0,
           maxScale: 2.2,
           child: CachedNetworkImage(
-            fit: BoxFit.fill,
+            fit: BoxFit.cover,
             imageUrl: imagePath,
+            placeholder: (context, url) =>
+                const Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error, color: Colors.red),
           ),
         ),
       ),

@@ -2,8 +2,6 @@ import 'package:calculetor/pages/image_page.dart';
 import 'package:calculetor/pages/network_image_page.dart';
 import 'package:calculetor/pages/video_page.dart';
 import 'package:flutter/material.dart';
-// import '../firebase/config.dart';
-import '../utils/grid_box.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,37 +11,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // late Future<void> _initConfigFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    // _initConfigFuture = Config.initConfig();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        // appBar: AppBar(
-        //   title: FutureBuilder<void>(
-        //     future: _initConfigFuture,
-        //     builder: (context, snapshot) {
-        //       if (snapshot.connectionState == ConnectionState.waiting) {
-        //         return const SizedBox.shrink(); // Show nothing while waiting
-        //       } else if (snapshot.hasError) {
-        //         return const Text('Error loading ads');
-        //       } else {
-        //         return Text(Config.titleText);
-        //       }
-        //     },
-        //   ),
-        // ),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home Page'),
+        centerTitle: true,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -57,24 +37,99 @@ class _HomePageState extends State<HomePage> {
                 ),
                 GridBox(
                   boxName: 'Network Image',
-                  boxIcon: Icons.image,
+                  boxIcon: Icons.wifi,
                   onTap: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (b) => const NetworkImagePage()));
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (b) => const NetworkImagePage(),
+                      ),
+                    );
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Padding(
               padding: const EdgeInsets.only(left: 20),
               child: GridBox(
                 boxName: 'Video',
-                boxIcon: Icons.camera_alt,
+                boxIcon: Icons.videocam,
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (b) =>  VideoPage()));
+                      MaterialPageRoute(builder: (b) => const MediaPage()));
                 },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GridBox extends StatefulWidget {
+  final Function()? onTap;
+  final String boxName;
+  final IconData boxIcon;
+  const GridBox({
+    super.key,
+    this.onTap,
+    required this.boxName,
+    required this.boxIcon,
+  });
+
+  @override
+  State<GridBox> createState() => _GridBoxState();
+}
+
+class _GridBoxState extends State<GridBox> {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDarkMode = theme.brightness == Brightness.dark;
+
+    return GestureDetector(
+      onTap: widget.onTap,
+      child: Container(
+        height: 140,
+        width: 160,
+        decoration: BoxDecoration(
+          color: isDarkMode ? Colors.grey[850] : Colors.grey[300],
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: isDarkMode ? Colors.black54 : Colors.grey[400]!,
+              offset: const Offset(2, 2),
+              blurRadius: 6,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              widget.boxIcon,
+              size: 80,
+              color: isDarkMode ? Colors.white70 : Colors.black87,
+            ),
+            const SizedBox(height: 8),
+            Container(
+              decoration: BoxDecoration(
+                color: isDarkMode ? Colors.grey[700] : Colors.grey[500],
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(10),
+                  bottomRight: Radius.circular(10),
+                ),
+              ),
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              child: Text(
+                widget.boxName,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 20,
+                  color: isDarkMode ? Colors.white70 : Colors.black87,
+                ),
               ),
             ),
           ],

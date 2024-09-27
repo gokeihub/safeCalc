@@ -1,22 +1,93 @@
-import 'package:auto_size_text/auto_size_text.dart';
+import 'package:calculetor/package/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:calculetor/pages/home_page.dart';
-import '../package/double_back_to_close_app.dart';
-import '../utils/button.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:io';
+import 'home_page.dart';
 
 class PasswordHomePage extends StatefulWidget {
-  // ignore: use_super_parameters
-  const PasswordHomePage({key}) : super(key: key);
+  const PasswordHomePage({super.key});
 
   @override
   State<PasswordHomePage> createState() => _PasswordHomePageState();
 }
 
-class _PasswordHomePageState extends State<PasswordHomePage> {
+class _PasswordHomePageState extends State<PasswordHomePage>
+    with WidgetsBindingObserver {
   var input = '';
+  String? storedPassword;
+  bool isFirstTime = false;
 
-  addNumber(String value) {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _checkFirstTime();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      exit(0);
+    }
+  }
+
+  Future<void> _checkFirstTime() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    storedPassword = prefs.getString('password');
+
+    if (storedPassword == null) {
+      isFirstTime = true;
+      _showSetPasswordDialog();
+    } else {
+      isFirstTime = false;
+    }
+    setState(() {});
+  }
+
+  Future<void> _savePassword(String password) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('password', password);
+    storedPassword = password;
+    setState(() {});
+  }
+
+  void _showSetPasswordDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String newPassword = '';
+        return AlertDialog(
+          title: const Text('Set Password'),
+          content: TextField(
+            onChanged: (value) {
+              newPassword = value;
+            },
+            obscureText: true,
+            decoration: const InputDecoration(hintText: 'Number ....'),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                if (newPassword.isNotEmpty) {
+                  _savePassword(newPassword);
+                  Navigator.of(context).pop();
+                }
+              },
+              child: const Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void addNumber(String value) {
     setState(() {
       if (value == 'C') {
         input = '';
@@ -30,19 +101,21 @@ class _PasswordHomePageState extends State<PasswordHomePage> {
     });
   }
 
-  late _AppLifecycleObserver _appLifecycleObserver;
-
-  @override
-  void initState() {
-    super.initState();
-    _appLifecycleObserver = _AppLifecycleObserver();
-    WidgetsBinding.instance.addObserver(_appLifecycleObserver);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(_appLifecycleObserver);
-    super.dispose();
+  void _submitPassword() {
+    if (isFirstTime) {
+      _savePassword(input).then((_) {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ));
+      });
+    } else {
+      if (input == storedPassword) {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => const HomePage(),
+        ));
+      } else {}
+    }
+    input = '';
   }
 
   @override
@@ -68,20 +141,18 @@ class _PasswordHomePageState extends State<PasswordHomePage> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.all(20.0),
-                      child: AutoSizeText(
+                      child: Text(
                         input,
-                        maxLines: 3,
-                        maxFontSize: 40,
-                        minFontSize: 20,
                         style:
                             const TextStyle(color: Colors.white, fontSize: 40),
                       ),
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: SelectableText(
-                        '',
-                        style: TextStyle(color: Colors.white38, fontSize: 30),
+                    Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Text(
+                        isFirstTime ? 'Set a password' : 'Enter password',
+                        style: const TextStyle(
+                            color: Colors.white38, fontSize: 30),
                       ),
                     ),
                   ],
@@ -241,12 +312,7 @@ class _PasswordHomePageState extends State<PasswordHomePage> {
                     text: '=',
                     boxColor: Colors.green,
                     onTap: () {
-                      if (input == '01907') {
-                        _appLifecycleObserver.setPasswordPageVisibility(false);
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (b) => const HomePage(),
-                        ));
-                      }
+                      _submitPassword();
                     },
                   ),
                 ],
@@ -259,17 +325,43 @@ class _PasswordHomePageState extends State<PasswordHomePage> {
   }
 }
 
-class _AppLifecycleObserver extends WidgetsBindingObserver {
-  bool _isPasswordPageVisible = true;
+class Button extends StatelessWidget {
+  final Function()? onTap;
+  final String text;
+  final Color? textColor;
+  final Color? boxColor;
 
-  void setPasswordPageVisibility(bool isVisible) {
-    _isPasswordPageVisible = isVisible;
-  }
+  const Button({
+    super.key,
+    required this.onTap,
+    required this.text,
+    this.textColor = Colors.white,
+    this.boxColor = const Color.fromARGB(115, 61, 57, 57),
+  });
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (!_isPasswordPageVisible && state == AppLifecycleState.paused) {
-      SystemNavigator.pop();
-    }
+  Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: size.width * 0.24,
+        height: 90,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: boxColor,
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 40,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
