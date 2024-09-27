@@ -1,4 +1,4 @@
-package com.example.calculetor
+package com.gokei.safecalc
 
 import io.flutter.embedding.android.FlutterActivity
 

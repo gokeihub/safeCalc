@@ -4,7 +4,6 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 List<CameraDescription> cameras = [];
@@ -126,10 +125,6 @@ class MediaPageState extends State<MediaPage> {
   }
 
   Future<void> _captureMedia(ImageSource source) async {
-    if (!(await Permission.storage.request().isGranted)) {
-      return;
-    }
-
     final imagePicker = ImagePicker();
     if (source == ImageSource.camera && _isCameraInitialized) {
       await _initializeControllerFuture;
