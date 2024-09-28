@@ -1,14 +1,14 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'dart:io';
+import 'package:calculetor/package/double_back_to_close_app.dart';
 import 'package:calculetor/pages/main_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:math_expressions/math_expressions.dart';
-import '../package/double_back_to_close_app.dart';
-import 'Home/widget/button_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
+import 'Home/widget/button_widget.dart';
 
 class CalculatorPage extends StatefulWidget {
   const CalculatorPage({super.key});
@@ -60,23 +60,18 @@ class _CalculatorPageState extends State<CalculatorPage>
           input = input.substring(0, input.length - 1);
         }
       } else if (value == '%') {
-        // Interpret '%' as divide by 100
         input += '/100';
       } else if (value == '()') {
-        // Add logic to handle parentheses intelligently
         if (input.isEmpty ||
             input.endsWith('(') ||
             input.endsWith('+') ||
             input.endsWith('-') ||
             input.endsWith('×') ||
             input.endsWith('÷')) {
-          // Add an opening parenthesis
           input += '(';
         } else if (input.endsWith(')')) {
-          // If it ends with a closing parenthesis, add an operator before the new parenthesis
           input += '*(';
         } else {
-          // Add a closing parenthesis if there are enough opening ones
           int openCount = 0;
           int closeCount = 0;
           for (var char in input.split('')) {
@@ -86,7 +81,7 @@ class _CalculatorPageState extends State<CalculatorPage>
           if (openCount > closeCount) {
             input += ')';
           } else {
-            input += '('; // Default to opening parenthesis if not balanced
+            input += '(';
           }
         }
       } else {
@@ -111,11 +106,14 @@ class _CalculatorPageState extends State<CalculatorPage>
 
   void handlePasswordSubmission() {
     if (input == savedPassword) {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const StartPage()));
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (builder) => StartPage(),
+        ),
+      );
       input = '';
       calculationResult = '';
-    }
+    } else {}
   }
 
   void setPassword() {
@@ -130,9 +128,7 @@ class _CalculatorPageState extends State<CalculatorPage>
               oldPasswordInput = value;
             },
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Old Password',
-            ),
+            decoration: const InputDecoration(labelText: 'Old Password'),
             obscureText: true,
           ),
           actions: [
@@ -142,14 +138,13 @@ class _CalculatorPageState extends State<CalculatorPage>
             ),
             TextButton(
               onPressed: () {
-                if (oldPasswordInput == savedPassword) {
+                if (savedPassword == null ||
+                    oldPasswordInput == savedPassword) {
                   Navigator.of(context).pop();
                   _promptNewPassword();
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Old password is incorrect'),
-                    ),
+                    const SnackBar(content: Text('Old password is incorrect')),
                   );
                 }
               },
@@ -173,9 +168,7 @@ class _CalculatorPageState extends State<CalculatorPage>
               newPassword = value;
             },
             keyboardType: TextInputType.number,
-            decoration: const InputDecoration(
-              labelText: 'Enter New Password',
-            ),
+            decoration: const InputDecoration(labelText: 'Enter New Password'),
             obscureText: true,
           ),
           actions: [
@@ -185,17 +178,18 @@ class _CalculatorPageState extends State<CalculatorPage>
             ),
             TextButton(
               onPressed: () async {
-                setState(() {
-                  savedPassword = newPassword;
-                });
-                final prefs = await SharedPreferences.getInstance();
-                await prefs.setString('savedPassword', newPassword);
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Password changed successfully'),
-                  ),
-                );
+                if (newPassword.isNotEmpty) {
+                  setState(() {
+                    savedPassword = newPassword;
+                  });
+                  final prefs = await SharedPreferences.getInstance();
+                  await prefs.setString('savedPassword', newPassword);
+                  Navigator.of(context).pop();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                        content: Text('Password changed successfully')),
+                  );
+                }
               },
               child: const Text('Save'),
             ),
@@ -242,9 +236,7 @@ class _CalculatorPageState extends State<CalculatorPage>
                           maxLines: 3,
                           minFontSize: 18,
                           style: const TextStyle(
-                            color: Colors.white38,
-                            fontSize: 30,
-                          ),
+                              color: Colors.white38, fontSize: 30),
                         ),
                       ),
                   ],
@@ -318,31 +310,33 @@ class _CalculatorPageState extends State<CalculatorPage>
                   ButtonWidget(text: '0', onTap: () => addNumber("0")),
                   ButtonWidget(text: '.', onTap: () => addNumber(".")),
                   ButtonWidget(
-                      text: 'Del',
-                      boxColor: Colors.red,
-                      onTap: () {
-                        if (input.isNotEmpty) {
-                          input = input.substring(0, input.length - 1);
-                          setState(() {});
-                        }
-                      }),
+                    text: 'Del',
+                    boxColor: Colors.red,
+                    onTap: () {
+                      if (input.isNotEmpty) {
+                        input = input.substring(0, input.length - 1);
+                        setState(() {});
+                      }
+                    },
+                  ),
                   GestureDetector(
                     onLongPress: setPassword,
                     child: ButtonWidget(
-                        text: '=',
-                        boxColor: Colors.green,
-                        onTap: () {
-                          if (savedPassword == null) {
-                            setPassword();
-                          } else {
-                            String result = evaluateExpression(input);
-                            setState(() {
-                              calculationResult = result;
-                            });
-                            handlePasswordSubmission();
-                            setState(() {});
-                          }
-                        }),
+                      text: '=',
+                      boxColor: Colors.green,
+                      onTap: () {
+                        if (savedPassword == null) {
+                          _promptNewPassword();
+                        } else {
+                          String result = evaluateExpression(input);
+                          setState(() {
+                            calculationResult = result;
+                          });
+                          handlePasswordSubmission();
+                          setState(() {});
+                        }
+                      },
+                    ),
                   ),
                 ],
               ),

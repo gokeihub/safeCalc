@@ -6,7 +6,6 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-List<CameraDescription> cameras = [];
 List<String> mediaFilePaths = [];
 
 class MediaPage extends StatefulWidget {
@@ -29,8 +28,6 @@ class MediaPageState extends State<MediaPage> {
   }
 
   Future<void> _initializeCamera() async {
-    cameras = await availableCameras();
-    _cameraController = CameraController(cameras[0], ResolutionPreset.medium);
     _initializeControllerFuture = _cameraController.initialize();
     await _initializeControllerFuture;
     setState(() {
@@ -199,7 +196,6 @@ class MediaPageState extends State<MediaPage> {
 
 class MediaFullScreenPage extends StatelessWidget {
   final String mediaPath;
-
   const MediaFullScreenPage({super.key, required this.mediaPath});
 
   @override

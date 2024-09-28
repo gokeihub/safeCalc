@@ -440,6 +440,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.19.0"
+  klutter_platfrom_verify:
+    dependency: "direct main"
+    description:
+      name: klutter_platfrom_verify
+      sha256: "198ff8f6e75bbc16951f956acef176697e4fc6f456b4af025f708c089f6622d9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   leak_tracker:
     dependency: transitive
     description:
