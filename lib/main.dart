@@ -1,5 +1,5 @@
-import 'package:calculetor/pages/image_page.dart';
-import 'package:calculetor/pages/password_home_page.dart';
+import 'package:calculetor/pages/Home/pages/image_page.dart';
+import 'package:calculetor/pages/calculator_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
@@ -15,9 +15,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData.dark(),
+      //   theme: ThemeData(
+      //   brightness: Brightness.light,
+      //   primaryColor: Colors.blueAccent,
+      //   iconTheme: const IconThemeData(color: Colors.black54),
+      // ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.blueAccent,
+        iconTheme: const IconThemeData(color: Colors.white70),
+      ),
+      // themeMode: ThemeMode.system,
       debugShowCheckedModeBanner: false,
-      home: PasswordHomePage(),
+      home: CalculatorPage(),
     );
   }
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-class Button extends StatefulWidget {
+class ButtonWidget extends StatefulWidget {
   final Function()? onTap;
   final String? text;
   final Color? textColor;
   final Color? boxColor;
-  const Button({
+  const ButtonWidget({
     super.key,
     this.onTap,
     this.text,
@@ -14,10 +14,10 @@ class Button extends StatefulWidget {
   });
 
   @override
-  State<Button> createState() => _ButtonState();
+  State<ButtonWidget> createState() => _ButtonWidgetState();
 }
 
-class _ButtonState extends State<Button> {
+class _ButtonWidgetState extends State<ButtonWidget> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

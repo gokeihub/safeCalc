@@ -1,20 +1,21 @@
 import 'dart:io';
+import 'package:calculetor/pages/main_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:math_expressions/math_expressions.dart';
-import 'package:calculetor/pages/home_page.dart';
 import '../package/double_back_to_close_app.dart';
-import '../utils/button.dart';
+import 'Home/widget/button_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/intl.dart';
 
-class PasswordHomePage extends StatefulWidget {
-  const PasswordHomePage({super.key});
+class CalculatorPage extends StatefulWidget {
+  const CalculatorPage({super.key});
 
   @override
-  State<PasswordHomePage> createState() => _PasswordHomePageState();
+  State<CalculatorPage> createState() => _CalculatorPageState();
 }
 
-class _PasswordHomePageState extends State<PasswordHomePage>
+class _CalculatorPageState extends State<CalculatorPage>
     with WidgetsBindingObserver {
   var input = '';
   String? savedPassword;
@@ -69,7 +70,8 @@ class _PasswordHomePageState extends State<PasswordHomePage>
       Expression exp = p.parse(expression);
       ContextModel cm = ContextModel();
       double eval = exp.evaluate(EvaluationType.REAL, cm);
-      return eval.toString();
+      NumberFormat formatter = NumberFormat('#,##0.################');
+      return formatter.format(eval);
     } catch (e) {
       return 'Error';
     }
@@ -78,7 +80,7 @@ class _PasswordHomePageState extends State<PasswordHomePage>
   void handlePasswordSubmission() {
     if (input == savedPassword) {
       Navigator.of(context)
-          .push(MaterialPageRoute(builder: (context) => const HomePage()));
+          .push(MaterialPageRoute(builder: (context) => const StartPage()));
     }
   }
 
@@ -93,7 +95,10 @@ class _PasswordHomePageState extends State<PasswordHomePage>
             onChanged: (value) {
               newPassword = value;
             },
-            decoration: const InputDecoration(labelText: 'Enter new password'),
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              labelText: 'Enter new password',
+            ),
             obscureText: true,
           ),
           actions: [
@@ -169,13 +174,15 @@ class _PasswordHomePageState extends State<PasswordHomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Button(
+                  ButtonWidget(
                       text: 'C',
                       textColor: Colors.red,
                       onTap: () => addNumber("C")),
-                  Button(text: '()', textColor: Colors.green, onTap: () {}),
-                  Button(text: '%', textColor: Colors.green, onTap: () {}),
-                  Button(
+                  ButtonWidget(
+                      text: '()', textColor: Colors.green, onTap: () {}),
+                  ButtonWidget(
+                      text: '%', textColor: Colors.green, onTap: () {}),
+                  ButtonWidget(
                       text: '÷',
                       textColor: Colors.green,
                       onTap: () => addNumber("÷")),
@@ -184,10 +191,10 @@ class _PasswordHomePageState extends State<PasswordHomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Button(text: '7', onTap: () => addNumber("7")),
-                  Button(text: '8', onTap: () => addNumber("8")),
-                  Button(text: '9', onTap: () => addNumber("9")),
-                  Button(
+                  ButtonWidget(text: '7', onTap: () => addNumber("7")),
+                  ButtonWidget(text: '8', onTap: () => addNumber("8")),
+                  ButtonWidget(text: '9', onTap: () => addNumber("9")),
+                  ButtonWidget(
                       text: '×',
                       textColor: Colors.green,
                       onTap: () => addNumber("×")),
@@ -196,10 +203,10 @@ class _PasswordHomePageState extends State<PasswordHomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Button(text: '4', onTap: () => addNumber("4")),
-                  Button(text: '5', onTap: () => addNumber("5")),
-                  Button(text: '6', onTap: () => addNumber("6")),
-                  Button(
+                  ButtonWidget(text: '4', onTap: () => addNumber("4")),
+                  ButtonWidget(text: '5', onTap: () => addNumber("5")),
+                  ButtonWidget(text: '6', onTap: () => addNumber("6")),
+                  ButtonWidget(
                       text: '-',
                       textColor: Colors.green,
                       onTap: () => addNumber("-")),
@@ -208,10 +215,10 @@ class _PasswordHomePageState extends State<PasswordHomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Button(text: '1', onTap: () => addNumber("1")),
-                  Button(text: '2', onTap: () => addNumber("2")),
-                  Button(text: '3', onTap: () => addNumber("3")),
-                  Button(
+                  ButtonWidget(text: '1', onTap: () => addNumber("1")),
+                  ButtonWidget(text: '2', onTap: () => addNumber("2")),
+                  ButtonWidget(text: '3', onTap: () => addNumber("3")),
+                  ButtonWidget(
                       text: '+',
                       textColor: Colors.green,
                       onTap: () => addNumber("+")),
@@ -220,9 +227,9 @@ class _PasswordHomePageState extends State<PasswordHomePage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Button(text: '0', onTap: () => addNumber("0")),
-                  Button(text: '.', onTap: () => addNumber(".")),
-                  Button(
+                  ButtonWidget(text: '0', onTap: () => addNumber("0")),
+                  ButtonWidget(text: '.', onTap: () => addNumber(".")),
+                  ButtonWidget(
                       text: 'Del',
                       boxColor: Colors.red,
                       onTap: () {
@@ -231,7 +238,7 @@ class _PasswordHomePageState extends State<PasswordHomePage>
                           setState(() {});
                         }
                       }),
-                  Button(
+                  ButtonWidget(
                       text: '=',
                       boxColor: Colors.green,
                       onTap: () {

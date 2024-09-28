@@ -59,7 +59,7 @@ class MediaPageState extends State<MediaPage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Media Capture and View'),
+        title: const Text('Video'),
       ),
       body: Column(
         children: [

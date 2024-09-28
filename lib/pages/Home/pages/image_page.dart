@@ -309,7 +309,7 @@ class ImagePageState extends State<ImagePage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Text('Media Capture and View'),
+        title: const Text('Image'),
       ),
       body: Column(
         children: [
@@ -382,8 +382,8 @@ class ImagePageState extends State<ImagePage> {
     final imagePicker = ImagePicker();
     
     // Use pickMultiImage to allow selecting multiple images
-    final List<XFile>? mediaFiles = await imagePicker.pickMultiImage();
-    if (mediaFiles == null || mediaFiles.isEmpty) {
+    final List<XFile> mediaFiles = await imagePicker.pickMultiImage();
+    if (mediaFiles.isEmpty) {
       return;
     }
 

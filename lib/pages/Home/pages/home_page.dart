@@ -1,6 +1,6 @@
-import 'package:calculetor/pages/image_page.dart';
-import 'package:calculetor/pages/network_image_page.dart';
-import 'package:calculetor/pages/video_page.dart';
+import 'package:calculetor/pages/Home/pages/image_page.dart';
+import 'package:calculetor/pages/Home/pages/network_image_page.dart';
+import 'package:calculetor/pages/Home/pages/video_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
