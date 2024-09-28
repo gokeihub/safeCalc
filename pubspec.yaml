@@ -26,6 +26,7 @@ dependencies:
   package_info_plus: ^8.0.2
   intl: ^0.19.0
   connectivity_plus: ^6.0.5
+  font_awesome_flutter: ^10.7.0
 
 dev_dependencies:
   flutter_test:

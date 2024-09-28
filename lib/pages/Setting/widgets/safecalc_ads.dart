@@ -8,15 +8,15 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class BookifyAds extends StatefulWidget {
+class SafecalcAds extends StatefulWidget {
   final String apiUrl;
-  const BookifyAds({super.key, required this.apiUrl});
+  const SafecalcAds({super.key, required this.apiUrl});
 
   @override
-  BookifyAdsState createState() => BookifyAdsState();
+  SafecalcAdsState createState() => SafecalcAdsState();
 }
 
-class BookifyAdsState extends State<BookifyAds> {
+class SafecalcAdsState extends State<SafecalcAds> {
   // Variables to hold API data
   String? url;
   String? image;

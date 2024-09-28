@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:calculetor/pages/main_navigation.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +59,36 @@ class _CalculatorPageState extends State<CalculatorPage>
         if (input.isNotEmpty) {
           input = input.substring(0, input.length - 1);
         }
+      } else if (value == '%') {
+        // Interpret '%' as divide by 100
+        input += '/100';
+      } else if (value == '()') {
+        // Add logic to handle parentheses intelligently
+        if (input.isEmpty ||
+            input.endsWith('(') ||
+            input.endsWith('+') ||
+            input.endsWith('-') ||
+            input.endsWith('×') ||
+            input.endsWith('÷')) {
+          // Add an opening parenthesis
+          input += '(';
+        } else if (input.endsWith(')')) {
+          // If it ends with a closing parenthesis, add an operator before the new parenthesis
+          input += '*(';
+        } else {
+          // Add a closing parenthesis if there are enough opening ones
+          int openCount = 0;
+          int closeCount = 0;
+          for (var char in input.split('')) {
+            if (char == '(') openCount++;
+            if (char == ')') closeCount++;
+          }
+          if (openCount > closeCount) {
+            input += ')';
+          } else {
+            input += '('; // Default to opening parenthesis if not balanced
+          }
+        }
       } else {
         input += value;
       }
@@ -81,6 +113,8 @@ class _CalculatorPageState extends State<CalculatorPage>
     if (input == savedPassword) {
       Navigator.of(context)
           .push(MaterialPageRoute(builder: (context) => const StartPage()));
+      input = '';
+      calculationResult = '';
     }
   }
 
@@ -88,16 +122,59 @@ class _CalculatorPageState extends State<CalculatorPage>
     showDialog(
       context: context,
       builder: (context) {
+        String oldPasswordInput = '';
+        return AlertDialog(
+          title: const Text('Enter Old Password'),
+          content: TextField(
+            onChanged: (value) {
+              oldPasswordInput = value;
+            },
+            keyboardType: TextInputType.number,
+            decoration: const InputDecoration(
+              labelText: 'Old Password',
+            ),
+            obscureText: true,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                if (oldPasswordInput == savedPassword) {
+                  Navigator.of(context).pop();
+                  _promptNewPassword();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Old password is incorrect'),
+                    ),
+                  );
+                }
+              },
+              child: const Text('Submit'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _promptNewPassword() {
+    showDialog(
+      context: context,
+      builder: (context) {
         String newPassword = '';
         return AlertDialog(
-          title: const Text('Set Password'),
+          title: const Text('Set New Password'),
           content: TextField(
             onChanged: (value) {
               newPassword = value;
             },
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Enter new password',
+            decoration: const InputDecoration(
+              labelText: 'Enter New Password',
             ),
             obscureText: true,
           ),
@@ -113,8 +190,12 @@ class _CalculatorPageState extends State<CalculatorPage>
                 });
                 final prefs = await SharedPreferences.getInstance();
                 await prefs.setString('savedPassword', newPassword);
-                // ignore: use_build_context_synchronously
                 Navigator.of(context).pop();
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Password changed successfully'),
+                  ),
+                );
               },
               child: const Text('Save'),
             ),
@@ -158,9 +239,12 @@ class _CalculatorPageState extends State<CalculatorPage>
                         padding: const EdgeInsets.all(12.0),
                         child: AutoSizeText(
                           calculationResult!,
-                          maxLines: 1,
+                          maxLines: 3,
+                          minFontSize: 18,
                           style: const TextStyle(
-                              color: Colors.white38, fontSize: 30),
+                            color: Colors.white38,
+                            fontSize: 30,
+                          ),
                         ),
                       ),
                   ],
@@ -179,9 +263,13 @@ class _CalculatorPageState extends State<CalculatorPage>
                       textColor: Colors.red,
                       onTap: () => addNumber("C")),
                   ButtonWidget(
-                      text: '()', textColor: Colors.green, onTap: () {}),
+                      text: '()',
+                      textColor: Colors.green,
+                      onTap: () => addNumber("()")),
                   ButtonWidget(
-                      text: '%', textColor: Colors.green, onTap: () {}),
+                      text: '%',
+                      textColor: Colors.green,
+                      onTap: () => addNumber("%")),
                   ButtonWidget(
                       text: '÷',
                       textColor: Colors.green,
@@ -238,20 +326,24 @@ class _CalculatorPageState extends State<CalculatorPage>
                           setState(() {});
                         }
                       }),
-                  ButtonWidget(
-                      text: '=',
-                      boxColor: Colors.green,
-                      onTap: () {
-                        if (savedPassword == null) {
-                          setPassword();
-                        } else {
-                          String result = evaluateExpression(input);
-                          setState(() {
-                            calculationResult = result;
-                          });
-                          handlePasswordSubmission();
-                        }
-                      }),
+                  GestureDetector(
+                    onLongPress: setPassword,
+                    child: ButtonWidget(
+                        text: '=',
+                        boxColor: Colors.green,
+                        onTap: () {
+                          if (savedPassword == null) {
+                            setPassword();
+                          } else {
+                            String result = evaluateExpression(input);
+                            setState(() {
+                              calculationResult = result;
+                            });
+                            handlePasswordSubmission();
+                            setState(() {});
+                          }
+                        }),
+                  ),
                 ],
               ),
             ],
