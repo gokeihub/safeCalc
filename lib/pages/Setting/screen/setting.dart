@@ -26,118 +26,120 @@ class _SettingPageState extends State<SettingPage> {
         apiUrl:
             "https://apon06.github.io/bookify_api/safecalc_ads/safecalc_ads_1.json",
       ),
-      body: Column(
-        children: [
-          Card(
-            child: ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (b) => const AppInformationPage(),
-                  ),
-                );
-              },
-              title: const Text('App Information'),
-              trailing: const Icon(Icons.info_rounded),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Card(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (b) => const AppInformationPage(),
+                    ),
+                  );
+                },
+                title: const Text('App Information'),
+                trailing: const Icon(Icons.info_rounded),
+              ),
             ),
-          ),
-          Card(
-            child: ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (b) => const AboutSafecalc(),
-                  ),
-                );
-              },
-              title: const Text('About safeCalc'),
-              trailing: const Icon(Icons.info_rounded),
+            Card(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (b) => const AboutSafecalc(),
+                    ),
+                  );
+                },
+                title: const Text('About safeCalc'),
+                trailing: const Icon(Icons.info_rounded),
+              ),
             ),
-          ),
-          SafecalcAds(
-            apiUrl:
-                "https://apon06.github.io/bookify_api/safecalc_ads/safecalc_ads_2.json",
-          ),
-          Card(
-            child: ListTile(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (b) => const ChangeLogPage(),
-                  ),
-                );
-              },
-              title: const Text('Changelog'),
-              trailing: const Icon(Icons.history),
+            SafecalcAds(
+              apiUrl:
+                  "https://apon06.github.io/bookify_api/safecalc_ads/safecalc_ads_2.json",
             ),
-          ),
-          Card(
-            child: ListTile(
-              onTap: () async {
-                String privacyUrl =
-                    'https://sites.google.com/view/safecalc-pricey/home';
-                final Uri url = Uri.parse(privacyUrl);
-                if (await canLaunch(url.toString())) {
-                  await launch(url.toString());
-                } else {
-                  await launch(url.toString());
-                }
-              },
-              title: const Text('Privacy Policy'),
-              trailing: const Icon(Icons.privacy_tip),
+            Card(
+              child: ListTile(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (b) => const ChangeLogPage(),
+                    ),
+                  );
+                },
+                title: const Text('Changelog'),
+                trailing: const Icon(Icons.history),
+              ),
             ),
-          ),
-          SafecalcAds(
-            apiUrl:
-                "https://apon06.github.io/bookify_api/safecalc_ads/safecalc_ads_3.json",
-          ),
-          Card(
-            child: ListTile(
-              onTap: () async {
-                String privacyUrl =
-                    'https://sites.google.com/view/safecalc-terms/home';
-                final Uri url = Uri.parse(privacyUrl);
-                if (await canLaunch(url.toString())) {
-                  await launch(url.toString());
-                } else {
-                  await launch(url.toString());
-                }
-              },
-              title: const Text('Terms & Conditions'),
-              trailing: Icon(Icons.assignment),
+            Card(
+              child: ListTile(
+                onTap: () async {
+                  String privacyUrl =
+                      'https://sites.google.com/view/safecalc-pricey/home';
+                  final Uri url = Uri.parse(privacyUrl);
+                  if (await canLaunch(url.toString())) {
+                    await launch(url.toString());
+                  } else {
+                    await launch(url.toString());
+                  }
+                },
+                title: const Text('Privacy Policy'),
+                trailing: const Icon(Icons.privacy_tip),
+              ),
             ),
-          ),
-          Card(
-            child: ListTile(
-              onTap: () async {
-                String privacyUrl = 'https://github.com/apon06';
-                final Uri url = Uri.parse(privacyUrl);
-                if (await canLaunch(url.toString())) {
-                  await launch(url.toString());
-                } else {
-                  await launch(url.toString());
-                }
-              },
-              title: const Text('Github'),
-              trailing: Icon(FontAwesomeIcons.github),
+            SafecalcAds(
+              apiUrl:
+                  "https://apon06.github.io/bookify_api/safecalc_ads/safecalc_ads_3.json",
             ),
-          ),
-          Card(
-            child: ListTile(
-              onTap: () async {
-                String privacyUrl = 'https://t.me/+-xBeTl30frgwNWI1';
-                final Uri url = Uri.parse(privacyUrl);
-                if (await canLaunch(url.toString())) {
-                  await launch(url.toString());
-                } else {
-                  await launch(url.toString());
-                }
-              },
-              title: const Text('Telegram'),
-              trailing: Icon(Icons.telegram),
+            Card(
+              child: ListTile(
+                onTap: () async {
+                  String privacyUrl =
+                      'https://sites.google.com/view/safecalc-terms/home';
+                  final Uri url = Uri.parse(privacyUrl);
+                  if (await canLaunch(url.toString())) {
+                    await launch(url.toString());
+                  } else {
+                    await launch(url.toString());
+                  }
+                },
+                title: const Text('Terms & Conditions'),
+                trailing: Icon(Icons.assignment),
+              ),
             ),
-          ),
-        ],
+            Card(
+              child: ListTile(
+                onTap: () async {
+                  String privacyUrl = 'https://github.com/apon06';
+                  final Uri url = Uri.parse(privacyUrl);
+                  if (await canLaunch(url.toString())) {
+                    await launch(url.toString());
+                  } else {
+                    await launch(url.toString());
+                  }
+                },
+                title: const Text('Github'),
+                trailing: Icon(FontAwesomeIcons.github),
+              ),
+            ),
+            Card(
+              child: ListTile(
+                onTap: () async {
+                  String privacyUrl = 'https://t.me/+-xBeTl30frgwNWI1';
+                  final Uri url = Uri.parse(privacyUrl);
+                  if (await canLaunch(url.toString())) {
+                    await launch(url.toString());
+                  } else {
+                    await launch(url.toString());
+                  }
+                },
+                title: const Text('Telegram'),
+                trailing: Icon(Icons.telegram),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

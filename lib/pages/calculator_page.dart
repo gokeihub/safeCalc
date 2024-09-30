@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:calculetor/package/double_back_to_close_app.dart';
 import 'package:calculetor/pages/main_navigation.dart';
 import 'package:flutter/material.dart';
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:math_expressions/math_expressions.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
@@ -214,29 +213,41 @@ class _CalculatorPageState extends State<CalculatorPage>
               SizedBox(
                 height: size.height * 0.4,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(20.0),
-                      child: AutoSizeText(
-                        input,
-                        maxLines: 3,
-                        maxFontSize: 40,
-                        minFontSize: 20,
-                        style:
-                            const TextStyle(color: Colors.white, fontSize: 40),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        reverse: true,
+                        padding: EdgeInsets.all(20),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: SelectableText(
+                            input,
+                            style: TextStyle(
+                              fontSize: 45,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     if (calculationResult != null)
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: AutoSizeText(
-                          calculationResult!,
-                          maxLines: 3,
-                          minFontSize: 18,
-                          style: const TextStyle(
-                              color: Colors.white38, fontSize: 30),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          padding: EdgeInsets.all(20),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: SelectableText(
+                              calculationResult!,
+                              style: TextStyle(
+                                fontSize: 35,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                   ],
