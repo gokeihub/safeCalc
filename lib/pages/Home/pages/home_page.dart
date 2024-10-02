@@ -97,7 +97,7 @@ class _GridBoxState extends State<GridBox> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        height: 140,
+        // height: 140, // Dont need this.
         width: 160,
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.grey[850] : Colors.grey[300],
