@@ -210,10 +210,41 @@ class _CalculatorPageState extends State<CalculatorPage>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              calculationResult != '' ?
-                  TopExpand(input: input) :
-                  BottomExpand(calculationResult: calculationResult),
-        
+              calculationResult != ''
+                  ? Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        reverse: true,
+                        padding: EdgeInsets.all(20),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: SelectableText(
+                            input,
+                            style: TextStyle(
+                              fontSize: 45,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : Expanded(
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        reverse: true,
+                        padding: EdgeInsets.all(20),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: SelectableText(
+                            calculationResult!,
+                            style: TextStyle(
+                              fontSize: 35,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
               const Divider(
                   color: Color.fromARGB(115, 84, 77, 77),
                   thickness: 2,
@@ -371,6 +402,7 @@ class TopExpand extends StatelessWidget {
             style: TextStyle(
               fontSize: 45,
               fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
           ),
         ),
