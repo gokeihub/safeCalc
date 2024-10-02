@@ -20,6 +20,11 @@ class MyApp extends StatelessWidget {
         primaryColor: Colors.blueAccent,
         iconTheme: const IconThemeData(color: Colors.white70),
       ),
+      theme: ThemeData(
+        brightness: Brightness.dark,
+        primaryColor: Colors.blueAccent,
+        iconTheme: const IconThemeData(color: Colors.white70),
+      ),
       debugShowCheckedModeBanner: false,
       home: CalculatorPage(),
     );

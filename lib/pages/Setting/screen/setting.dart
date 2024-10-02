@@ -39,7 +39,7 @@ class _SettingPageState extends State<SettingPage> {
                   );
                 },
                 title: const Text('App Information'),
-                trailing: const Icon(Icons.info_rounded),
+                trailing: const Icon(FontAwesomeIcons.info),
               ),
             ),
             Card(
