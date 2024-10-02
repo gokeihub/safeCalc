@@ -106,7 +106,8 @@ class StartPageState extends State<StartPage> {
       bottom: true,
       top: false,
       child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        //! remove this
+        // backgroundColor: theme.scaffoldBackgroundColor,
         body: _pages[currentIndex],
         bottomNavigationBar: buildBottomNavigationBar(displayWidth, theme),
       ),

@@ -24,8 +24,9 @@ class _ButtonWidgetState extends State<ButtonWidget> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
-        padding: EdgeInsets.all(4),
+        //! remove this
+        // margin: EdgeInsets.symmetric(vertical: 5, horizontal: 0),
+        // padding: EdgeInsets.all(4),
         width: size.width * 0.24,
         height: 90,
         decoration: BoxDecoration(
