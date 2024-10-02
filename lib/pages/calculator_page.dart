@@ -210,7 +210,7 @@ class _CalculatorPageState extends State<CalculatorPage>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              calculationResult != null ?
+              calculationResult != '' ?
                   TopExpand(input: input) :
                   BottomExpand(calculationResult: calculationResult),
         
