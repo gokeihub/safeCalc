@@ -102,14 +102,20 @@ class StartPageState extends State<StartPage> {
   Widget build(BuildContext context) {
     double displayWidth = MediaQuery.of(context).size.width;
     final theme = Theme.of(context);
-    return Scaffold(
-      body: _pages[currentIndex],
-      bottomNavigationBar: buildBottomNavigationBar(displayWidth, theme),
+    return SafeArea(
+      bottom: true,
+      top: false,
+      child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        body: _pages[currentIndex],
+        bottomNavigationBar: buildBottomNavigationBar(displayWidth, theme),
+      ),
     );
   }
 
-  Container buildBottomNavigationBar(double displayWidth, ThemeData theme) {
+  Widget buildBottomNavigationBar(double displayWidth, ThemeData theme) {
     return Container(
+      // padding: EdgeInsets.only(bottom: 20),
       height: 60,
       decoration: BoxDecoration(
         color:
