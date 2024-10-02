@@ -1,5 +1,5 @@
 // ignore_for_file: use_build_context_synchronously
-
+//! old code use only 23 line not change
 import 'dart:io';
 import 'package:calculetor/package/double_back_to_close_app.dart';
 import 'package:calculetor/pages/main_navigation.dart';
@@ -210,8 +210,13 @@ class _CalculatorPageState extends State<CalculatorPage>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              calculationResult != ''
-                  ? Expanded(
+              SizedBox(
+                height: size.height * 0.3,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Expanded(
                       child: SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         reverse: true,
@@ -228,23 +233,28 @@ class _CalculatorPageState extends State<CalculatorPage>
                           ),
                         ),
                       ),
-                    )
-                  : Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        reverse: true,
-                        padding: EdgeInsets.all(20),
-                        child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: SelectableText(
-                            calculationResult!,
-                            style: TextStyle(
-                              fontSize: 35,
+                    ),
+                    if (calculationResult != null)
+                      Expanded(
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          reverse: true,
+                          padding: EdgeInsets.all(20),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: SelectableText(
+                              calculationResult!,
+                              style: TextStyle(
+                                fontSize: 35,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
+                  ],
+                ),
+              ),
               const Divider(
                   color: Color.fromARGB(115, 84, 77, 77),
                   thickness: 2,
@@ -344,66 +354,6 @@ class _CalculatorPageState extends State<CalculatorPage>
                 ],
               ),
             ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class BottomExpand extends StatelessWidget {
-  const BottomExpand({
-    super.key,
-    required this.calculationResult,
-  });
-
-  final String? calculationResult;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        reverse: true,
-        padding: EdgeInsets.all(20),
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: SelectableText(
-            calculationResult!,
-            style: TextStyle(
-              fontSize: 35,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class TopExpand extends StatelessWidget {
-  const TopExpand({
-    super.key,
-    required this.input,
-  });
-
-  final String input;
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        reverse: true,
-        padding: EdgeInsets.all(20),
-        child: Align(
-          alignment: Alignment.bottomRight,
-          child: SelectableText(
-            input,
-            style: TextStyle(
-              fontSize: 45,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
           ),
         ),
       ),
