@@ -1,6 +1,5 @@
 //! The user interface of this page is similar to that of LocalSend
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../widgets/text_button_widget.dart';
 
@@ -24,8 +23,8 @@ class AboutSafecalc extends StatelessWidget {
                   child: SizedBox(
                     height: 100,
                     width: 100,
-                    child: CachedNetworkImage(
-                      imageUrl: "https://i.postimg.cc/GpyZ9kJL/calculetor.png",
+                    child: Image.asset(
+                      "assets/calculetor1.png",
                     ),
                   ),
                 ),
@@ -37,7 +36,7 @@ class AboutSafecalc extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Text("© 2024 Md Apon Ahmed"),
+                const Text("© 2025 Gokeihub"),
                 const SizedBox(height: 15),
                 const TextButtonWidget(
                     text: "Gokei Hub", url: 'https://gokeihub.blogspot.com/'),
@@ -57,10 +56,10 @@ class AboutSafecalc extends StatelessWidget {
                 ),
                 const Row(
                   children: [
-                    Text("Md Apon Ahmed"),
+                    Text("Gokeihub LAB"),
                     TextButtonWidget(
-                      text: "apon06",
-                      url: 'https://github.com/apon06',
+                      text: "gokeihub",
+                      url: 'https://github.com/gokeihub',
                     ),
                   ],
                 ),
@@ -76,17 +75,17 @@ class AboutSafecalc extends StatelessWidget {
                       ),
                       TextButtonWidget(
                         text: "Source Code (Github)",
-                        url: 'https://github.com/apon06/safeCalc',
+                        url: 'https://github.com/gokeihub/safeCalc',
                       ),
                       TextButtonWidget(
                         text: "License",
                         url:
-                            'https://github.com/apon06/safeCalc/blob/main/LICENSE',
+                            'https://github.com/gokeihub/safeCalc/blob/main/LICENSE',
                       ),
                       TextButtonWidget(
                         text: "CHANGELOG",
                         url:
-                            'https://github.com/apon06/safeCalc/blob/main/CHANGELOG.md',
+                            'https://github.com/gokeihub/safeCalc/blob/main/CHANGELOG.md',
                       ),
                     ],
                   ),

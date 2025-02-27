@@ -1,7 +1,7 @@
 name: calculetor
 description: "A new Flutter project."
 publish_to: "none"
-version: 1.0.0+1
+version: 1.1.0+1
 
 environment:
   sdk: ">=3.3.1 <4.0.0"
@@ -17,7 +17,7 @@ dependencies:
   permission_handler: ^11.3.1
   shared_preferences: ^2.3.2
   auto_size_text: ^3.0.0
-  better_player: ^0.0.84
+  better_player_enhanced: ^0.0.5
   cached_network_image: ^3.4.1
   camera: ^0.11.0+2
   flutter_markdown: ^0.7.3+2
@@ -25,9 +25,17 @@ dependencies:
   http: ^1.2.2
   package_info_plus: ^8.0.2
   intl: ^0.19.0
-  connectivity_plus: ^6.0.5
   font_awesome_flutter: ^10.7.0
   klutter_platfrom_verify: ^0.0.2
+  share_plus: ^10.1.4
+
+  # media_kit Upcoming all platform support
+  # media_kit: 
+  # media_kit_video:
+  # media_kit_libs_android_video: 
+  # media_kit_libs_ios_video: 
+  # media_kit_libs_windows_video: 
+  # media_kit_native_event_loop:
 
 dev_dependencies:
   flutter_test:
@@ -35,17 +43,18 @@ dev_dependencies:
 
 
 icons_launcher:
-  image_path: "assets/calculetor.png"
+  image_path: "assets/calculetor1.png"
   platforms:
     android:
       enable: true
     ios:
       enable: true
 
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
 
 flutter:
   uses-material-design: true
 
   assets:
     - CHANGELOG.md
+    - assets/calculetor1.png

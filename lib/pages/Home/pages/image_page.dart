@@ -97,7 +97,7 @@ class ImagePageState extends State<ImagePage> {
                     child: const Text('Capture from Camera'),
                   ),
                 //! if mobile Phone
-                if (isDesktop())
+                if (isMobile())
                   GestureDetector(
                     onTap: () {
                       Navigator.of(context).pop();
@@ -112,7 +112,7 @@ class ImagePageState extends State<ImagePage> {
                     child: const Text('Capture from Camera'),
                   ),
                 //! if desktop
-                if (isMobile()) SizedBox(),
+                if (isDesktop()) SizedBox(),
 
                 const SizedBox(height: 10),
                 GestureDetector(

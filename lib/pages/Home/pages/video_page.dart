@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:better_player/better_player.dart';
+import 'package:better_player_enhanced/better_player.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

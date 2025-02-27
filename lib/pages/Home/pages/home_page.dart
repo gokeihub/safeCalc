@@ -3,8 +3,6 @@ import 'package:calculetor/pages/Home/pages/network_image_page.dart';
 import 'package:calculetor/pages/Home/pages/video_page.dart';
 import 'package:flutter/material.dart';
 
-import '../../Setting/widgets/safecalc_ads.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -16,10 +14,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: SafecalcAds(
-        apiUrl:
-            "https://apon06.github.io/bookify_api/safecalc_ads/safecalc_ads_4.json",
-      ),
       appBar: AppBar(
         title: const Text('Home Page'),
         centerTitle: true,

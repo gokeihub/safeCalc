@@ -44,7 +44,7 @@ class StartPageState extends State<StartPage> {
   Future<void> checkForUpdate() async {
     try {
       final response = await http.get(Uri.parse(
-          'https://apon06.github.io/bookify_api/safeCalc_update.json'));
+          'https://gokeihub.github.io/bookify_api/safeCalc_update.json'));
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -81,7 +81,7 @@ class StartPageState extends State<StartPage> {
           TextButton(
             onPressed: () async {
               const String appUpdateUrl =
-                  'https://github.com/apon06/safeCalc/releases';
+                  'https://github.com/gokeihub/safeCalc/releases';
 
               final Uri url = Uri.parse(appUpdateUrl);
 
