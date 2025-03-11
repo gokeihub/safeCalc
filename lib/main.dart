@@ -3,11 +3,14 @@ import 'package:calculetor/pages/Home/pages/image_page.dart';
 import 'package:calculetor/pages/calculator_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:media_kit/media_kit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   if (Platform.isAndroid || Platform.isIOS) {
     cameras = await availableCameras();
+  }else{
+     MediaKit.ensureInitialized(); 
   }
   runApp(const MyApp());
 }

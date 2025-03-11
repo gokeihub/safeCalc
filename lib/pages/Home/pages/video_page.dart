@@ -2,9 +2,15 @@ import 'dart:io';
 import 'package:better_player_enhanced/better_player.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:media_kit/media_kit.dart';
+import 'package:media_kit_video/media_kit_video.dart';
+
+// Initialize MediaKit at app startup
+final bool _isDesktop = !kIsWeb && (Platform.isLinux || Platform.isWindows || Platform.isMacOS);
 
 List<String> mediaFilePaths = [];
 
@@ -16,28 +22,47 @@ class MediaPage extends StatefulWidget {
 }
 
 class MediaPageState extends State<MediaPage> {
-  late CameraController _cameraController;
-  late Future<void> _initializeControllerFuture;
-  bool _isCameraInitialized = false;
+  CameraController? _cameraController;
+  Future<void>? _initializeControllerFuture;
+  bool isCameraInitialized = false;
+  bool _isMobilePlatform = false;
 
   @override
   void initState() {
     super.initState();
     _loadMediaFilePaths();
-    _initializeCamera();
+    _isMobilePlatform = !kIsWeb && (Platform.isAndroid || Platform.isIOS);
+    if (_isMobilePlatform) {
+      _initializeCamera();
+    }
   }
 
   Future<void> _initializeCamera() async {
-    _initializeControllerFuture = _cameraController.initialize();
-    await _initializeControllerFuture;
-    setState(() {
-      _isCameraInitialized = true;
-    });
+    try {
+      final cameras = await availableCameras();
+      if (cameras.isNotEmpty) {
+        _cameraController = CameraController(
+          cameras.first,
+          ResolutionPreset.medium,
+        );
+        _initializeControllerFuture = _cameraController!.initialize();
+        await _initializeControllerFuture;
+        if (mounted) {
+          setState(() {
+            isCameraInitialized = true;
+          });
+        }
+      }
+    } catch (e) {
+      print('Error initializing camera: $e');
+    }
   }
 
   @override
   void dispose() {
-    _cameraController.dispose();
+    if (_cameraController != null) {
+      _cameraController!.dispose();
+    }
     super.dispose();
   }
 
@@ -70,23 +95,17 @@ class MediaPageState extends State<MediaPage> {
                   onTap: () => _showMediaFullScreenPage(mediaFilePaths[index]),
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: mediaFilePaths[index].endsWith('.mp4')
-                        ? Container(
-                            height: 150,
-                            width: 150,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[500],
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Center(
-                              child: Icon(Icons.videocam, size: 100),
-                            ),
-                          )
-                        : Image.file(
-                            File(
-                              mediaFilePaths[index],
-                            ),
-                          ),
+                    child: Container(
+                      height: 150,
+                      width: 150,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[500],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: const Center(
+                        child: Icon(Icons.videocam, size: 100),
+                      ),
+                    ),
                   ),
                 );
               },
@@ -113,6 +132,15 @@ class MediaPageState extends State<MediaPage> {
                   },
                   child: const Text('Pick from Gallery'),
                 ),
+                const SizedBox(height: 10),
+                if (_isMobilePlatform)
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      _captureMedia(ImageSource.camera);
+                    },
+                    child: const Text('Take Photo/Video'),
+                  ),
               ],
             ),
           ),
@@ -123,20 +151,13 @@ class MediaPageState extends State<MediaPage> {
 
   Future<void> _captureMedia(ImageSource source) async {
     final imagePicker = ImagePicker();
-    if (source == ImageSource.camera && _isCameraInitialized) {
-      await _initializeControllerFuture;
-      final XFile file = await _cameraController.takePicture();
-      _addMediaFile(file.path);
-    } else {
-      final XFile? mediaFile = await imagePicker.pickVideo(source: source);
-      if (mediaFile != null) {
-        _addMediaFile(mediaFile.path);
-      } else {
-        final XFile? videoFile = await imagePicker.pickVideo(source: source);
-        if (videoFile != null) {
-          _addMediaFile(videoFile.path);
-        }
+    try {
+      final XFile? videoFile = await imagePicker.pickVideo(source: source);
+      if (videoFile != null) {
+        _addMediaFile(videoFile.path);
       }
+    } catch (e) {
+      print('Error picking video: $e');
     }
   }
 
@@ -194,40 +215,68 @@ class MediaPageState extends State<MediaPage> {
   }
 }
 
-class MediaFullScreenPage extends StatelessWidget {
+class MediaFullScreenPage extends StatefulWidget {
   final String mediaPath;
   const MediaFullScreenPage({super.key, required this.mediaPath});
+
+  @override
+  State<MediaFullScreenPage> createState() => _MediaFullScreenPageState();
+}
+
+class _MediaFullScreenPageState extends State<MediaFullScreenPage> {
+  late final Player _player;
+  late final VideoController _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (_isDesktop) {
+      // Initialize media_kit player for desktop platforms
+      _player = Player();
+      _videoController = VideoController(_player);
+      _player.open(Media(widget.mediaPath));
+    }
+  }
+
+  @override
+  void dispose() {
+    if (_isDesktop) {
+      _player.dispose();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Video Player"),
+        title: const Text("Video Player"),
       ),
       body: Center(
-        child: mediaPath.endsWith('.mp4')
-            ? BetterPlayer.file(
-                mediaPath,
-                betterPlayerConfiguration: BetterPlayerConfiguration(
-                  aspectRatio: _getVideoAspectRatio(mediaPath),
-                  fit: BoxFit.contain,
-                  autoPlay: true,
-                  looping: true,
-                ),
-              )
-            : InteractiveViewer(
-                boundaryMargin: const EdgeInsets.all(80),
-                panEnabled: false,
-                scaleEnabled: true,
-                minScale: 1.0,
-                maxScale: 2.2,
-                child: Image.file(
-                  File(mediaPath),
-                  fit: BoxFit.contain,
-                ),
-              ),
+        child: _buildVideoPlayer(),
       ),
     );
+  }
+
+  Widget _buildVideoPlayer() {
+    if (_isDesktop) {
+      // Use media_kit for desktop platforms
+      return Video(
+        controller: _videoController,
+        controls: AdaptiveVideoControls,
+      );
+    } else {
+      // Use better_player for other platforms
+      return BetterPlayer.file(
+        widget.mediaPath,
+        betterPlayerConfiguration: BetterPlayerConfiguration(
+          aspectRatio: _getVideoAspectRatio(widget.mediaPath),
+          fit: BoxFit.contain,
+          autoPlay: true,
+          looping: true,
+        ),
+      );
+    }
   }
 
   double _getVideoAspectRatio(String mediaPath) {
