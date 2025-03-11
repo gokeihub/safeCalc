@@ -1,11 +1,9 @@
 name: Build Flutter App
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
   build-ios:
     runs-on: macos-latest
@@ -17,7 +15,19 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter build ios --release --no-codesign
-
+      # Create IPA
+      - name: Package IPA
+        run: |
+          cd build/ios/iphoneos
+          mkdir Payload
+          cp -r Runner.app Payload
+          zip -r app.ipa Payload
+      - name: Upload IPA
+        uses: actions/upload-artifact@v3
+        with:
+          name: ios-app
+          path: build/ios/iphoneos/app.ipa
+          
   build-macos:
     runs-on: macos-latest
     steps:
@@ -28,7 +38,12 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter build macos --release
-
+      - name: Upload macOS App
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-app
+          path: build/macos/Build/Products/Release/*.app
+          
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -45,7 +60,16 @@ jobs:
           sudo apt-get install -y libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
       - run: flutter pub get
       - run: flutter build linux --release
-
+      - name: Archive Linux build
+        run: |
+          cd build/linux/x64/release/bundle
+          tar -czf ../../../../../linux-app.tar.gz *
+      - name: Upload Linux App
+        uses: actions/upload-artifact@v3
+        with:
+          name: linux-app
+          path: linux-app.tar.gz
+          
   build-windows:
     runs-on: windows-latest
     steps:
@@ -56,3 +80,12 @@ jobs:
           channel: 'stable'
       - run: flutter pub get
       - run: flutter build windows --release
+      - name: Package Windows app
+        run: |
+          Compress-Archive -Path build\windows\runner\Release\* -DestinationPath windows-app.zip
+        shell: pwsh
+      - name: Upload Windows App
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-app
+          path: windows-app.zip
