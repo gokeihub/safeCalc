@@ -5,7 +5,7 @@
     <key>CFBundleDevelopmentRegion</key>
     <string>$(DEVELOPMENT_LANGUAGE)</string>
     <key>CFBundleDisplayName</key>
-    <string>SafeCalc</string>
+    <string>Calculator</string>
     <key>CFBundleExecutable</key>
     <string>$(EXECUTABLE_NAME)</string>
     <key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
     <key>CFBundleName</key>
-    <string>SafeCalc</string>
+    <string>Calculator</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleShortVersionString</key>
@@ -56,10 +56,18 @@
 
     <!-- Permission to access the user's photo library for reading files -->
     <key>NSPhotoLibraryUsageDescription</key>
-    <string>SafeCalc needs access to your photo library to read files.</string>
+    <string>Calculator needs access to your photo library to read files.</string>
 
     <!-- Optional: Permission to access user documents (iCloud or device) -->
     <key>NSDocumentsUsageDescription</key>
-    <string>SafeCalc needs access to your documents to read files.</string>
+    <string>Calculator needs access to your documents to read files.</string>
+    
+    <!-- Permission to access the camera -->
+    <key>NSCameraUsageDescription</key>
+    <string>Calculator needs camera access to take photos.</string>
+    
+    <!-- Permission to write to photo library -->
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Calculator needs permission to save photos to your library.</string>
 </dict>
 </plist>

@@ -2,7 +2,7 @@
 
 **we will install this app among the thousands of such apps in Play store. At first I thought but then I thought that they are not open source. So they won't need even 1 second for your security at 12 o'clock. So here's my little try. There are a lot of things left to do, which I will do in the future. You can do it if you want**
 
-**Download the app and use it.** [download](https://github.com/gokeihub/safeCalc/releases/tag/version_0)
+**Download the app and use it.** [download](https://github.com/gokeihub/safeCalc/releases)
 
 ## How can you contribute?
 
