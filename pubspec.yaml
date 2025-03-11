@@ -32,12 +32,11 @@ dependencies:
   # media_kit Upcoming all platform support
   media_kit: ^1.1.11
   media_kit_video: ^1.2.5
-  media_kit_libs_android_video: 
-  media_kit_libs_ios_video: 
   media_kit_libs_windows_video: 
   media_kit_libs_linux:
-  media_kit_native_event_loop :
-  # media_kit_native_event_loop:
+  media_kit_libs_macos_video:
+  media_kit_native_event_loop:
+  window_manager: ^0.4.3
 
 dev_dependencies:
   flutter_test:

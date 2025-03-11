@@ -24,39 +24,48 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GridBox(
-                  boxName: 'Image',
-                  boxIcon: Icons.image,
-                  onTap: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (b) => const ImagePage()));
-                  },
+            Expanded(
+              child: GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2, 
+                  crossAxisSpacing: 16, 
+                  mainAxisSpacing: 16, // Space between rows
                 ),
-                GridBox(
-                  boxName: 'Network Image',
-                  boxIcon: Icons.wifi,
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (b) => const NetworkImagePage(),
-                      ),
+                itemCount: 3, // Number of items in the grid
+                itemBuilder: (context, index) {
+                  if (index == 0) {
+                    return GridBox(
+                      boxName: 'Image',
+                      boxIcon: Icons.image,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (b) => const ImagePage()),
+                        );
+                      },
                     );
-                  },
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.only(left: 20),
-              child: GridBox(
-                boxName: 'Video',
-                boxIcon: Icons.videocam,
-                onTap: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (b) => const MediaPage()));
+                  } else if (index == 1) {
+                    return GridBox(
+                      boxName: 'Network Image',
+                      boxIcon: Icons.wifi,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (b) => const NetworkImagePage(),
+                          ),
+                        );
+                      },
+                    );
+                  } else {
+                    return GridBox(
+                      boxName: 'Video',
+                      boxIcon: Icons.videocam,
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(builder: (b) => const MediaPage()),
+                        );
+                      },
+                    );
+                  }
                 },
               ),
             ),
@@ -91,18 +100,10 @@ class _GridBoxState extends State<GridBox> {
     return GestureDetector(
       onTap: widget.onTap,
       child: Container(
-        // height: 140, // Dont need this.
         width: 160,
         decoration: BoxDecoration(
           color: isDarkMode ? Colors.grey[850] : Colors.grey[300],
           borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-              color: isDarkMode ? Colors.black54 : Colors.grey[400]!,
-              offset: const Offset(2, 2),
-              blurRadius: 6,
-            ),
-          ],
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -115,7 +116,6 @@ class _GridBoxState extends State<GridBox> {
             const SizedBox(height: 8),
             Container(
               decoration: BoxDecoration(
-                color: isDarkMode ? Colors.grey[700] : Colors.grey[500],
                 borderRadius: const BorderRadius.only(
                   bottomLeft: Radius.circular(10),
                   bottomRight: Radius.circular(10),

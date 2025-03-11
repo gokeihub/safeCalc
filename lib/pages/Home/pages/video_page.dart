@@ -133,14 +133,14 @@ class MediaPageState extends State<MediaPage> {
                   child: const Text('Pick from Gallery'),
                 ),
                 const SizedBox(height: 10),
-                if (_isMobilePlatform)
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      _captureMedia(ImageSource.camera);
-                    },
-                    child: const Text('Take Photo/Video'),
-                  ),
+                // if (_isMobilePlatform)
+                //   GestureDetector(
+                //     // onTap: () {
+                //     //   Navigator.of(context).pop();
+                //     //   _captureMedia(ImageSource.camera);
+                //     // },
+                //     child: const Text('Take Photo/Video'),
+                //   ),
               ],
             ),
           ),

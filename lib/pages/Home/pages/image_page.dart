@@ -96,21 +96,6 @@ class ImagePageState extends State<ImagePage> {
                     },
                     child: const Text('Capture from Camera'),
                   ),
-                //! if mobile Phone
-                if (isMobile())
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => TakeImageScreen(
-                          onImageCapture: () {
-                            setState(() {});
-                          },
-                        ),
-                      ));
-                    },
-                    child: const Text('Capture from Camera'),
-                  ),
                 //! if desktop
                 if (isDesktop()) SizedBox(),
 
