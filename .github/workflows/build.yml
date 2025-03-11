@@ -82,7 +82,13 @@ jobs:
       - run: flutter build windows --release
       - name: Package Windows app
         run: |
-          Compress-Archive -Path build\windows\runner\Release\* -DestinationPath windows-app.zip
+          $buildPath = "build\windows\x64\runner\Release"
+          if (Test-Path $buildPath) {
+            Compress-Archive -Path "$buildPath\*" -DestinationPath windows-app.zip -Force
+          } else {
+            Write-Error "Build path not found: $buildPath"
+            exit 1
+          }
         shell: pwsh
       - name: Upload Windows App
         uses: actions/upload-artifact@v4
