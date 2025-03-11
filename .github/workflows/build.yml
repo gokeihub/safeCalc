@@ -23,7 +23,7 @@ jobs:
           cp -r Runner.app Payload
           zip -r app.ipa Payload
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ios-app
           path: build/ios/iphoneos/app.ipa
@@ -39,7 +39,7 @@ jobs:
       - run: flutter pub get
       - run: flutter build macos --release
       - name: Upload macOS App
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: macos-app
           path: build/macos/Build/Products/Release/*.app
@@ -65,7 +65,7 @@ jobs:
           cd build/linux/x64/release/bundle
           tar -czf ../../../../../linux-app.tar.gz *
       - name: Upload Linux App
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-app
           path: linux-app.tar.gz
@@ -85,7 +85,7 @@ jobs:
           Compress-Archive -Path build\windows\runner\Release\* -DestinationPath windows-app.zip
         shell: pwsh
       - name: Upload Windows App
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: windows-app
           path: windows-app.zip
